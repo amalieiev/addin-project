@@ -5,11 +5,19 @@ const data = {
         authorized: false,
         user: null,
     },
+    signatures: [
+        { id: Math.floor(Math.random() * 1000), title: "Signature 1" },
+        { id: Math.floor(Math.random() * 1000), title: "Signature 2" },
+    ],
 };
 
 export const handlers = [
     rest.get("/login", (req, res, ctx) => {
-        return res(ctx.delay(500), ctx.json(data.auth.authorized));
+        return res(ctx.delay(700), ctx.json(data.auth.authorized));
+    }),
+
+    rest.get("/signatures", (req, res, ctx) => {
+        return res(ctx.delay(500), ctx.json(data.signatures));
     }),
 
     rest.post("/login", (req, res, ctx) => {
@@ -19,8 +27,9 @@ export const handlers = [
         data.auth.user = username;
 
         return res(
+            ctx.delay(700),
             ctx.json({
-                username,
+                username: "username@gmail.com",
             })
         );
     }),

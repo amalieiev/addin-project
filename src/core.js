@@ -35,13 +35,12 @@ export function useMounted(callback) {
 export function render(component, props, parent) {
     componentState.set(parent, {
         ...componentState.get(parent),
+        onMounted() {},
     });
 
     globalParent = parent;
     const html = component(props);
     parent.innerHTML = html;
 
-    if (componentState.get(parent).onMounted) {
-        componentState.get(parent).onMounted(parent);
-    }
+    componentState.get(parent).onMounted(parent);
 }
