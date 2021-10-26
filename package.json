@@ -5,7 +5,7 @@
   "main": "core.js",
   "scripts": {
     "build": "webpack --mode production",
-    "dev": "webpack-dev-server --mode development",
+    "start": "webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.4.0",
+    "dotenv": "^10.0.0",
     "mini-css-extract-plugin": "^2.4.3",
     "postcss-loader": "^6.2.0",
     "sass": "^1.43.3",

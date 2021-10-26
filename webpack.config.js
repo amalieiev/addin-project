@@ -2,10 +2,14 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+require("dotenv").config();
+
+const mocks = process.env.MOCK_API ? ["mocks"] : [];
 
 module.exports = {
     devtool: "source-map",
     entry: {
+        mocks: "./mocks/browser.js",
         taskpane: "./src/index.js",
     },
     output: {
@@ -33,7 +37,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "./public/index.html",
-            chunks: ["taskpane"],
+            chunks: [...mocks, "taskpane"],
         }),
         new MiniCssExtractPlugin({
             filename: "[name].css",
