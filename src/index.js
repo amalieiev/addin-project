@@ -84,7 +84,9 @@ function App() {
     });
 
     return `
-        <div id="layout">Loading...</div>
+        <div class="col justify-center align-center">
+            <div id="layout">Loading...</div>
+        </div>
     `;
 }
 
