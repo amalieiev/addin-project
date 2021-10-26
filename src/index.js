@@ -1,4 +1,4 @@
-import "./mocks/browser.js";
+import "./index.scss";
 
 import { render, useElement, useMounted, useSubject } from "./core.js";
 

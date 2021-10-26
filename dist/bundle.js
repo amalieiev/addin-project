@@ -1,1 +1,0 @@
-(()=>{"use strict";let t;const e=new Map;!function(n,o,c){e.set(c,{...e.get(c)}),t=c;const d=(fetch("api/authorized"),"Loading...");c.innerHTML=d,e.get(c).onMounted&&e.get(c).onMounted(c)}(0,0,document.getElementById("root"))})();
