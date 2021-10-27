@@ -1,4 +1,5 @@
 const path = require("path");
+const devCerts = require("office-addin-dev-certs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -6,7 +7,7 @@ require("dotenv").config();
 
 const mocks = process.env.MOCK_API ? ["mocks"] : [];
 
-module.exports = {
+module.exports = async (env, options) => ({
     devtool: "source-map",
     entry: {
         mocks: "./mocks/browser.js",
@@ -29,8 +30,19 @@ module.exports = {
             directory: path.join(__dirname, "public"),
         },
         compress: true,
-        port: 9000,
         open: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+        },
+        https:
+            options.https !== undefined
+                ? options.https
+                : await devCerts.getHttpsServerOptions().then((config) => {
+                      // Unsuported key.
+                      delete config.ca;
+                      return config;
+                  }),
+        port: process.env.npm_package_config_dev_server_port || 3000,
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -43,4 +55,4 @@ module.exports = {
             filename: "[name].css",
         }),
     ],
-};
+});
