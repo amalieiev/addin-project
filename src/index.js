@@ -107,7 +107,7 @@ function App() {
         });
 
         msalClient
-            .ssoSilent({})
+            .ssoSilent()
             .then(() => {
                 const currentAccounts = msalClient.getAllAccounts();
                 console.log(currentAccounts);
