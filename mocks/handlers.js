@@ -16,8 +16,8 @@ export const handlers = [
         return res(ctx.delay(700), ctx.json(data.auth.authorized));
     }),
 
-    rest.get("/signatures", (req, res, ctx) => {
-        return res(ctx.delay(500), ctx.json(data.signatures));
+    rest.post("/signatures", (req, res, ctx) => {
+        return res(ctx.delay(500), ctx.json(data));
     }),
 
     rest.post("/login", (req, res, ctx) => {

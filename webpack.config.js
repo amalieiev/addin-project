@@ -5,12 +5,12 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 require("dotenv").config();
 
-const mocks = process.env.MOCK_API ? ["mocks"] : [];
+const msw = process.env.MSW ? ["msw"] : [];
 
 module.exports = async (env, options) => ({
     devtool: "source-map",
     entry: {
-        mocks: "./mocks/browser.js",
+        msw: "./mocks/browser.js",
         taskpane: "./src/index.js",
     },
     output: {
@@ -49,7 +49,7 @@ module.exports = async (env, options) => ({
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "./public/index.html",
-            chunks: [...mocks, "taskpane"],
+            chunks: [...msw, "taskpane"],
         }),
         new MiniCssExtractPlugin({
             filename: "[name].css",

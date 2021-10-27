@@ -14,6 +14,8 @@ const msalClient = new PublicClientApplication({
     },
 });
 
+const token = createSubject(null);
+
 async function signIn() {
     return msalClient
         .loginPopup({
@@ -33,6 +35,7 @@ function Auth({ isAuthorized }) {
         el.querySelector(".button").addEventListener("click", () => {
             signIn().then((response) => {
                 console.log(response);
+                token.next(response.idToken);
                 isAuthorized.next(true);
             });
         });
@@ -73,10 +76,23 @@ function Signatures({ isAuthorized }) {
             });
         });
 
-        fetch("signatures")
+        fetch("signatures", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                Aurhorization: `Bearer ${token.value}`,
+            },
+            body: JSON.stringify({
+                sender: "admin@test.com",
+            }),
+        })
             .then((r) => r.json())
             .then((data) => {
-                signatures.next(data);
+                signatures.next(data.signatures);
+            })
+            .catch((err) => {
+                console.log(err);
             });
     });
 
@@ -96,24 +112,22 @@ function App() {
     useMounted((el) => {
         isAuthorized.subscribe(() => {
             if (isAuthorized.value === true) {
-                render(
-                    Signatures,
-                    { isAuthorized },
-                    el.querySelector("#layout")
-                );
+                render(Signatures, { isAuthorized }, el.querySelector("#layout"));
             } else {
                 render(Auth, { isAuthorized }, el.querySelector("#layout"));
             }
         });
 
         msalClient
-            .ssoSilent()
-            .then(() => {
+            .ssoSilent({})
+            .then((result) => {
                 const currentAccounts = msalClient.getAllAccounts();
+                console.log(result);
                 console.log(currentAccounts);
+                token.next(result.accessToken);
                 isAuthorized.next(true);
             })
-            .catch(() => {
+            .catch((err) => {
                 isAuthorized.next(false);
             });
     });
