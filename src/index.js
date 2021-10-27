@@ -1,11 +1,9 @@
 import "./index.scss";
 
-import { render, useElement, useMounted, useSubject } from "./core.js";
+import { render, useMounted, createSubject } from "./core.js";
 
 function Auth({ isAuthorized }) {
-    const el = useElement();
-
-    useMounted(() => {
+    useMounted((el) => {
         el.querySelector(".button").addEventListener("click", () => {
             fetch("/login", {
                 method: "POST",
@@ -29,24 +27,23 @@ function Auth({ isAuthorized }) {
 }
 
 function Signatures() {
-    const el = useElement();
-    const signatures = useSubject([]);
+    const signatures = createSubject([]);
 
-    signatures.subscribe((data) => {
-        const html = data
-            .map((signature) => {
-                return `
+    useMounted((el) => {
+        signatures.subscribe((data) => {
+            const html = data
+                .map((signature) => {
+                    return `
                 <div>
                     <p>${signature.title}</p>
                 </div>
             `;
-            })
-            .join("");
+                })
+                .join("");
 
-        el.querySelector(".signatures").innerHTML = html;
-    });
+            el.querySelector(".signatures").innerHTML = html;
+        });
 
-    useMounted(() => {
         fetch("signatures")
             .then((r) => r.json())
             .then((data) => {
@@ -62,18 +59,21 @@ function Signatures() {
 }
 
 function App() {
-    const isAuthorized = useSubject(false);
-    const el = useElement();
+    const isAuthorized = createSubject(false);
 
-    isAuthorized.subscribe(() => {
-        if (isAuthorized.value === true) {
-            render(Signatures, { isAuthorized }, el.querySelector("#layout"));
-        } else {
-            render(Auth, { isAuthorized }, el.querySelector("#layout"));
-        }
-    });
+    useMounted((el) => {
+        isAuthorized.subscribe(() => {
+            if (isAuthorized.value === true) {
+                render(
+                    Signatures,
+                    { isAuthorized },
+                    el.querySelector("#layout")
+                );
+            } else {
+                render(Auth, { isAuthorized }, el.querySelector("#layout"));
+            }
+        });
 
-    useMounted(() => {
         fetch("/login", {
             method: "GET",
         })

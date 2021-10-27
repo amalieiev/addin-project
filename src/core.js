@@ -1,7 +1,7 @@
 let globalParent;
 const componentState = new Map();
 
-export function useSubject(initialValue) {
+export function createSubject(initialValue) {
     return {
         value: initialValue,
         callbacks: [],
@@ -15,12 +15,6 @@ export function useSubject(initialValue) {
             });
         },
     };
-}
-
-export function useElement() {
-    return ((parent) => {
-        return parent;
-    })(globalParent);
 }
 
 export function useMounted(callback) {
